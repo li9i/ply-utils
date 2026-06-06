@@ -1,5 +1,9 @@
 # `ply_to_xyz_transframer`
 
+<p align="center">
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
+</p>
+
 Transform a `.ply` file expressed in one frame to a `.xyz` file expressed in another frame.
 
 - step 1: Inspect `launch/ply_to_xyz_transframer.launch.xml` and set the values of args.

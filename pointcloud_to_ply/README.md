@@ -1,5 +1,9 @@
 # `pointcloud_to_ply`
 
+<p align="center">
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
+</p>
+
 Capture a point cloud from a sensor by subscribing to the topic where it publishes messages to, and store it in `.ply` or `.obj` form on disk.
 
 Set your specific point cloud sensor topic, save location, and other params in `config/params.yaml`. Then launch the node with
