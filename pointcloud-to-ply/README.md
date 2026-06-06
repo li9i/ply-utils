@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://build.ros2.org/job/Jdev__pointcloud_to_ply__ubuntu_noble_amd64/"><img src="https://build.ros2.org/buildStatus/icon?job=Jdev__pointcloud_to_ply__ubuntu_noble_amd64" alt="Build Status"/></a>
-  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
 </p>
 
 The `pointcloud_to_ply` package is intended to capture a point cloud from a sensor by subscribing to the topic where it publishes messages to, and store it in `.ply` or `.obj` format on disk.
