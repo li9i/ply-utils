@@ -7,7 +7,7 @@
   <a href="https://build.ros2.org/job/Jdev__xyz_to_ply_transframer__ubuntu_noble_amd64/"><img src="https://build.ros2.org/buildStatus/icon?job=Jdev__xyz_to_ply_transframer__ubuntu_noble_amd64&subject=xyz_to_ply_transframer" alt="xyz_to_ply_transframer build status"/></a>
 </p>
 
-- [`pointcloud_to_ply`](pointcloud-to-ply/README.md) Capture a point cloud from a topic and store it in `.ply` or `.obj` format
+- [`pointcloud_to_ply`](pointcloud_to_ply/README.md) Capture a point cloud from a topic and store it in `.ply` or `.obj` format
 
 - [`ply_to_xyz_transframer`](ply_to_xyz_transframer/README.md) Transform a `.ply` file expressed in one frame of reference to a `.xyz` file expressed in another
 
