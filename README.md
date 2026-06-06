@@ -2,12 +2,15 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
+  <a href="https://build.ros2.org/job/Hsrc_uJ__pointcloud_to_ply__ubuntu_jammy__source/"><img src="https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__pointcloud_to_ply__ubuntu_jammy__source&subject=pointcloud_to_ply" alt="pointcloud_to_ply build status"/></a>
+  <a href="https://build.ros2.org/job/Hsrc_uJ__ply_to_xyz_transframer__ubuntu_jammy__source/"><img src="https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__ply_to_xyz_transframer__ubuntu_jammy__source&subject=ply_to_xyz_transframer" alt="ply_to_xyz_transframer build status"/></a>
+  <a href="https://build.ros2.org/job/Hsrc_uJ__xyz_to_ply_transframer__ubuntu_jammy__source/"><img src="https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__xyz_to_ply_transframer__ubuntu_jammy__source&subject=xyz_to_ply_transframer" alt="xyz_to_ply_transframer build status"/></a>
 </p>
 
-- [`pointcloud_to_ply`](pointcloud_to_ply/README.md) [![Build Status](https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__pointcloud_to_ply__ubuntu_jammy__source)](https://build.ros2.org/job/Hsrc_uJ__pointcloud_to_ply__ubuntu_jammy__source/) Capture a point cloud from a topic and store it in `.ply` or `.obj` format
+- [`pointcloud_to_ply`](pointcloud_to_ply/README.md) Capture a point cloud from a topic and store it in `.ply` or `.obj` format
 
-- [`ply_to_xyz_transframer`](ply_to_xyz_transframer/README.md) [![Build Status](https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__ply_to_xyz_transframer__ubuntu_jammy__source)](https://build.ros2.org/job/Hsrc_uJ__ply_to_xyz_transframer__ubuntu_jammy__source/) Transform a `.ply` file expressed in one frame of reference to a `.xyz` file expressed in another
+- [`ply_to_xyz_transframer`](ply_to_xyz_transframer/README.md) Transform a `.ply` file expressed in one frame of reference to a `.xyz` file expressed in another
 
-- [`xyz_to_ply_transframer`](xyz_to_ply_transframer/README.md) [![Build Status](https://build.ros2.org/buildStatus/icon?job=Hsrc_uJ__xyz_to_ply_transframer__ubuntu_jammy__source)](https://build.ros2.org/job/Hsrc_uJ__xyz_to_ply_transframer__ubuntu_jammy__source/) Transform a `.xyz` file expressed in one frame of reference to a `.ply` file expressed in another
+- [`xyz_to_ply_transframer`](xyz_to_ply_transframer/README.md) Transform a `.xyz` file expressed in one frame of reference to a `.ply` file expressed in another
 
 See the respective README docs under each directory for more.
