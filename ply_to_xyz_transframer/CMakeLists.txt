@@ -19,28 +19,18 @@ add_library(ply_to_xyz_transframer_lib
   src/ply_to_xyz_transframer.cpp
 )
 
-ament_target_dependencies(ply_to_xyz_transframer_lib
-  rclcpp
-  tf2_ros
-  tf2_geometry_msgs
-  sensor_msgs
-  std_srvs
-  yaml_cpp_vendor
-  pcl_conversions
+target_link_libraries(ply_to_xyz_transframer_lib PUBLIC
+  ${rclcpp_TARGETS}
+  ${tf2_ros_TARGETS}
+  ${tf2_geometry_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  ${yaml_cpp_vendor_TARGETS}
+  ${pcl_conversions_TARGETS}
 )
 
 add_executable(ply_to_xyz_transframer_interface_node src/ply_to_xyz_transframer_interface_node.cpp)
 target_link_libraries(ply_to_xyz_transframer_interface_node ply_to_xyz_transframer_lib)
-
-ament_target_dependencies(ply_to_xyz_transframer_interface_node
-  rclcpp
-  tf2_ros
-  tf2_geometry_msgs
-  sensor_msgs
-  std_srvs
-  yaml_cpp_vendor
-  pcl_conversions
-)
 
 
 if(BUILD_TESTING)
@@ -50,9 +40,13 @@ if(BUILD_TESTING)
   ament_cpplint()
 endif()
 
-install(TARGETS
-  ply_to_xyz_transframer_lib
-  ply_to_xyz_transframer_interface_node
+install(TARGETS ply_to_xyz_transframer_lib
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS ply_to_xyz_transframer_interface_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
