@@ -1,16 +1,30 @@
-### `ros2-utils`: A collection of ROS 2 Humble utility packages
+### `ply_utils`: ROS 2 utilities for PLY / XYZ / PointCloud2
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" alt="License: BSD 3-Clause"/></a>
-  <a href="https://build.ros2.org/job/Jdev__pointcloud_to_ply__ubuntu_noble_amd64/"><img src="https://build.ros2.org/buildStatus/icon?job=Jdev__pointcloud_to_ply__ubuntu_noble_amd64&subject=pointcloud_to_ply" alt="pointcloud_to_ply build status"/></a>
-  <a href="https://build.ros2.org/job/Jdev__ply_to_xyz_transframer__ubuntu_noble_amd64/"><img src="https://build.ros2.org/buildStatus/icon?job=Jdev__ply_to_xyz_transframer__ubuntu_noble_amd64&subject=ply_to_xyz_transframer" alt="ply_to_xyz_transframer build status"/></a>
-  <a href="https://build.ros2.org/job/Jdev__xyz_to_ply_transframer__ubuntu_noble_amd64/"><img src="https://build.ros2.org/buildStatus/icon?job=Jdev__xyz_to_ply_transframer__ubuntu_noble_amd64&subject=xyz_to_ply_transframer" alt="xyz_to_ply_transframer build status"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
+  <a href="https://index.ros.org/p/ply_utils/#jazzy"><img src="https://img.shields.io/ros/v/jazzy/ply_utils" alt="ROS 2 Jazzy version"/></a>
 </p>
 
-- [`pointcloud_to_ply`](pointcloud_to_ply/README.md) Capture a point cloud from a topic and store it in `.ply` or `.obj` format
+A single ROS 2 (Jazzy) package bundling three utilities:
 
-- [`ply_to_xyz_transframer`](ply_to_xyz_transframer/README.md) Transform a `.ply` file expressed in one frame of reference to a `.xyz` file expressed in another
+- **`pointcloud_to_ply`** — Capture a point cloud from a topic, reconstruct a mesh with PCL, and store it in `.ply` or `.obj` format
+- **`ply_to_xyz_transframer`** — Transform a `.ply` file expressed in one frame of reference to a `.xyz` file expressed in another
+- **`xyz_to_ply_transframer`** — Transform a `.xyz` file expressed in one frame of reference to a `.ply` file expressed in another
 
-- [`xyz_to_ply_transframer`](xyz_to_ply_transframer/README.md) Transform a `.xyz` file expressed in one frame of reference to a `.ply` file expressed in another
+## Build
 
-See the respective README docs under each directory for more.
+```bash
+cd ~/ros2_ws/src
+git clone -b jazzy_devel https://github.com/li9i/ply-utils.git
+cd ~/ros2_ws
+rosdep install --from-paths src -y --ignore-src
+colcon build --packages-select ply_utils
+```
+
+## Run
+
+```bash
+ros2 launch ply_utils pointcloud_to_ply.launch.xml
+ros2 launch ply_utils ply_to_xyz_transframer.launch.xml
+ros2 launch ply_utils xyz_to_ply_transframer.launch.xml
+```

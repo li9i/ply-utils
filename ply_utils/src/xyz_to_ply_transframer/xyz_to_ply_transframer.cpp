@@ -5,7 +5,7 @@
  * @version 0.1
  * @date 2025-07
  *
- * @copyright Copyright (c) 2025 - Alexandros Philotheou. All rights reserved.
+ * @copyright Copyright (c) 2025 - Alexandros Philotheou. Released under the MIT License (see LICENSE).
  *
  * @brief Transforms a .xyz file with content expressed in one frame
  *                to a .ply file with content expressed in another
