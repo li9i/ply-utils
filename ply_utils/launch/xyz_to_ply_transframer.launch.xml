@@ -12,7 +12,7 @@
   <arg name="source_frame"            default="map"/>
   <arg name="target_frame"            default="robot_base_link"/>
   <!-- ===================================================================== -->
-  <node pkg="$(var pkg_name)"
+  <node pkg="ply_utils"
        exec="$(var pkg_name)_interface_node"
        name="$(var pkg_name)"
        namespace="$(var namespace)"
