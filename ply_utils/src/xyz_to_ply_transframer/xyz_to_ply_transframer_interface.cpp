@@ -1,12 +1,24 @@
+// Copyright 2026 Alexandros Filotheou
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 /**
- * @file xyz_to_ply_transframer_interface.hpp
- *
- * @author [Alexandros Philotheou] - alefilot@auth.gr
- * @version 0.1
- * @date 2025-07
- *
- * @copyright Copyright (c) 2025 - Alexandros Philotheou. Released under the MIT License (see LICENSE).
- *
  * @brief An interface class to be used for triggering the functionality the
  *        node provides
  */
@@ -15,7 +27,8 @@
 
 /*******************************************************************************
 */
-TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node"),
+TransframerInterface::TransframerInterface()
+: Node("xyz_to_ply_transframer_node"),
   state_t0_(state_t0_init_),
   state_t1_(state_t1_init_),
   is_node_alive_(true),
@@ -34,7 +47,7 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
         this,
         std::placeholders::_1,
         std::placeholders::_2)
-      );
+    );
 
   // Call this service to pause functionality
   disable_pause_service_ =
@@ -45,7 +58,7 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
         this,
         std::placeholders::_1,
         std::placeholders::_2)
-      );
+    );
 
   // Call this service to stop functionality
   disable_stop_service_ =
@@ -56,7 +69,7 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
         this,
         std::placeholders::_1,
         std::placeholders::_2)
-      );
+    );
 
   // Create callback group for shutdown and kill service servers
   cb_group_ = this->create_callback_group(
@@ -73,7 +86,7 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
         std::placeholders::_2),
       rmw_qos_profile_services_default,
       cb_group_
-      );
+    );
 
   // Call this service to kill this node
   kill_service_ =
@@ -86,7 +99,7 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
         std::placeholders::_2),
       rmw_qos_profile_services_default,
       cb_group_
-      );
+    );
 
   // This service should be called by code in this node in order to signify
   // the end of execution of this node to the task planner that enabled it
@@ -115,32 +128,32 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
   size_t w = 5;
   size_t h = w;
 
-  for (unsigned int i = 0; i < w; i++)
-  {
+  for (unsigned int i = 0; i < w; i++) {
     std::vector<bool> tmp;
-    for (unsigned int j = 0; j < h; j++)
+    for (unsigned int j = 0; j < h; j++) {
       tmp.push_back(false);
+    }
 
     transition_table_.push_back(tmp);
   }
 
   // transition_table_[PLAY][PLAY]    = false;
-  transition_table_[PLAY][PAUSE]      = true;
-  transition_table_[PLAY][STOP]       = true;
-  transition_table_[PLAY][SHUTDOWN]   = true;
-  transition_table_[PLAY][KILL]       = true;
+  transition_table_[PLAY][PAUSE] = true;
+  transition_table_[PLAY][STOP] = true;
+  transition_table_[PLAY][SHUTDOWN] = true;
+  transition_table_[PLAY][KILL] = true;
   //----------------------------------------------------
-  transition_table_[PAUSE][PLAY]      = true;
+  transition_table_[PAUSE][PLAY] = true;
   // transition_table_[PAUSE][PAUSE]  = false;
-  transition_table_[PAUSE][STOP]      = true;
-  transition_table_[PAUSE][SHUTDOWN]  = true;
-  transition_table_[PAUSE][KILL]      = true;
+  transition_table_[PAUSE][STOP] = true;
+  transition_table_[PAUSE][SHUTDOWN] = true;
+  transition_table_[PAUSE][KILL] = true;
   //-----------------------------------------------------
-  transition_table_[STOP][PLAY]       = true;
+  transition_table_[STOP][PLAY] = true;
   // transition_table_[STOP][PAUSE]   = false;
   // transition_table_[STOP][STOP]    = false;
-  transition_table_[STOP][SHUTDOWN]   = true;
-  transition_table_[STOP][KILL]       = true;
+  transition_table_[STOP][SHUTDOWN] = true;
+  transition_table_[STOP][KILL] = true;
   //-----------------------------------------------------
   // transition_table_[SHUTDOWN][*]   = false;
   //-----------------------------------------------------
@@ -156,11 +169,9 @@ TransframerInterface::TransframerInterface() : Node("xyz_to_ply_transframer_node
 void TransframerInterface::clock_callback()
 {
   // ---------------------------------------------------------------------------
-  if (state_t0_.load() != state_t1_.load())
-  {
+  if (state_t0_.load() != state_t1_.load()) {
     // Transition to state if transition is allowed
-    if (transition_table_[state_t0_.load()][state_t1_.load()] == true)
-    {
+    if (transition_table_[state_t0_.load()][state_t1_.load()] == true) {
       RCLCPP_INFO(this->get_logger(), "EXECUTING TRANSITION: %d -> %d",
         state_t0_.load(), state_t1_.load());
 
@@ -168,51 +179,44 @@ void TransframerInterface::clock_callback()
       state_t0_.store(state_t1_.load());
 
       // -------------------------------------
-      if (state_t1_.load() == PLAY)
-      {
+      if (state_t1_.load() == PLAY) {
         RCLCPP_INFO(this->get_logger(), "Triggering execution PLAY");
         thread_start("xyz_to_ply_transframer_thread");
       }
       // -------------------------------------
-      if (state_t1_.load() == PAUSE)
-      {
+      if (state_t1_.load() == PAUSE) {
         RCLCPP_INFO(this->get_logger(), "Triggering execution PAUSE");
         thread_stop("xyz_to_ply_transframer_thread");
       }
       // -------------------------------------
-      if (state_t1_.load() == STOP)
-      {
+      if (state_t1_.load() == STOP) {
         RCLCPP_INFO(this->get_logger(), "Triggering execution STOP");
         thread_stop("xyz_to_ply_transframer_thread");
 
         // Notify that transframing has ended first (otherwise the task planner
         // that called this package cannot join it after it was stopped, which
         // means that it will block)
-        if (task_planner_notify_end_ == true)
+        if (task_planner_notify_end_ == true) {
           task_planner_notify_end();
+        }
       }
       // -------------------------------------
-      if (state_t1_.load() == SHUTDOWN)
-      {
+      if (state_t1_.load() == SHUTDOWN) {
         // Handled in own service callback. Otherwise functions called in this
         // scope might block SHUTDOWN
       }
       // -------------------------------------
-      if (state_t1_.load() == KILL)
-      {
+      if (state_t1_.load() == KILL) {
         // Handled in own service callback. Otherwise functions called in this
         // scope might block KILL
       }
-    }
-    else
-    {
+    } else {
       RCLCPP_INFO(this->get_logger(), "TRANSITION: %d -> %d NOT ALLOWED",
         state_t0_.load(), state_t1_.load());
 
       // Store old state to new
       state_t1_.store(state_t0_.load());
     }
-
   }
   // ---------------------------------------------------------------------------
 }
@@ -247,7 +251,7 @@ void TransframerInterface::commit_process_suicide()
  * values.  If declared downstream (xyz_to_ply_transframer [without the word
  * interface]) then `ros2 param list` does not list them
  */
-  void
+void
 TransframerInterface::declare_params()
 {
   // io directories
@@ -303,7 +307,7 @@ void TransframerInterface::execute()
  * @brief Service server to pause the functionality that this node offers
  */
 void TransframerInterface::handle_request_disable_pause(
-  const std::shared_ptr<std_srvs::srv::Trigger::Request>  req,
+  const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
   std::shared_ptr<std_srvs::srv::Trigger::Response> res)
 {
   RCLCPP_INFO(this->get_logger(), "Requesting execution PAUSE");
@@ -319,7 +323,7 @@ void TransframerInterface::handle_request_disable_pause(
  * (pause + return to task planner)
  */
 void TransframerInterface::handle_request_disable_stop(
-  const std::shared_ptr<std_srvs::srv::Trigger::Request>  req,
+  const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
   std::shared_ptr<std_srvs::srv::Trigger::Response> res)
 {
   RCLCPP_INFO(this->get_logger(), "Requesting execution STOP");
@@ -334,7 +338,7 @@ void TransframerInterface::handle_request_disable_stop(
  * @brief Service server to start the functionality that this node offers
  */
 void TransframerInterface::handle_request_enable(
-  const std::shared_ptr<std_srvs::srv::Trigger::Request>  req,
+  const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
   std::shared_ptr<std_srvs::srv::Trigger::Response> res)
 {
   RCLCPP_INFO(this->get_logger(), "Requesting execution PLAY");
@@ -350,7 +354,7 @@ void TransframerInterface::handle_request_enable(
  * https://answers.ros.org/question/294069/shutdown-a-node-from-another-node-in-ros-cpp/
  */
 void TransframerInterface::handle_request_kill(
-  const std::shared_ptr<std_srvs::srv::Trigger::Request>  req,
+  const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
   std::shared_ptr<std_srvs::srv::Trigger::Response> res)
 {
   RCLCPP_WARN(this->get_logger(), "Requesting node KILL");
@@ -364,8 +368,9 @@ void TransframerInterface::handle_request_kill(
   // Notify that transframing has ended unsuccessfully first (otherwise the task
   // planner that called this package cannot join it after it was stopped,
   // which means that it will block)
-  if (task_planner_notify_end_ == true)
+  if (task_planner_notify_end_ == true) {
     task_planner_notify_end();
+  }
 
   // Spin a new thread so that the service has time to respond back
   std::thread t = std::thread(&TransframerInterface::commit_process_suicide, this);
@@ -378,7 +383,7 @@ void TransframerInterface::handle_request_kill(
  * https://answers.ros.org/question/294069/shutdown-a-node-from-another-node-in-ros-cpp/
  */
 void TransframerInterface::handle_request_shutdown(
-  const std::shared_ptr<std_srvs::srv::Trigger::Request>  req,
+  const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
   std::shared_ptr<std_srvs::srv::Trigger::Response> res)
 {
   RCLCPP_WARN(this->get_logger(), "Requesting node SHUTDOWN");
@@ -392,8 +397,9 @@ void TransframerInterface::handle_request_shutdown(
   // Notify that transframing has ended unsuccessfully first (otherwise the task
   // planner that called this package cannot join it after it was stopped,
   // which means that it will block)
-  if (task_planner_notify_end_ == true)
+  if (task_planner_notify_end_ == true) {
     task_planner_notify_end();
+  }
 
   // Spin a new thread so that the service has time to respond back
   std::thread t = std::thread(&TransframerInterface::commit_node_suicide, this);
@@ -407,10 +413,8 @@ void TransframerInterface::handle_request_shutdown(
  */
 bool TransframerInterface::task_planner_notify_end()
 {
-  while (!trigger_join_service_client_ptr_->wait_for_service(std::chrono::seconds(1)))
-  {
-    if (!rclcpp::ok())
-    {
+  while (!trigger_join_service_client_ptr_->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
       RCLCPP_ERROR(this->get_logger(),
         "Client of service %s interrupted while waiting for service to appear",
         trigger_join_service_client_ptr_->get_service_name());
@@ -431,8 +435,7 @@ bool TransframerInterface::task_planner_notify_end()
   auto result_future =
     trigger_join_service_client_ptr_->async_send_request(request);
 
-  if (!rclcpp::ok())
-  {
+  if (!rclcpp::ok()) {
     RCLCPP_ERROR(this->get_logger(), "Program canceled");
     return false;
   }
@@ -446,7 +449,7 @@ bool TransframerInterface::task_planner_notify_end()
  * @brief If the entrypoint of your node is not a periodic callback then you
  * may spin up a thread
  */
-void TransframerInterface::thread_start(const std::string &tname)
+void TransframerInterface::thread_start(const std::string & tname)
 {
   std::thread t = std::thread(&TransframerInterface::entrypoint_wrapper, this);
   pthread_map_[tname] = t.native_handle();
@@ -459,13 +462,12 @@ void TransframerInterface::thread_start(const std::string &tname)
 /*******************************************************************************
  * @brief https://github.com/bo-yang/terminate_cpp_thread/blob/master/kill_cpp_thread.cc
  */
-void TransframerInterface::thread_stop(const std::string& tname)
+void TransframerInterface::thread_stop(const std::string & tname)
 {
   std::unordered_map<std::string, pthread_t>::const_iterator it =
     pthread_map_.find(tname);
 
-  if (it != pthread_map_.end())
-  {
+  if (it != pthread_map_.end()) {
     pthread_cancel(it->second);
     pthread_map_.erase(tname);
 
