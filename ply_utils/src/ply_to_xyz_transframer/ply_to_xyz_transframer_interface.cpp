@@ -41,34 +41,34 @@ TransframerInterface::TransframerInterface()
   // Call this service to start functionality
   enable_service_ =
     this->create_service<std_srvs::srv::Trigger>(
-      std::string(this->get_name()) + "/execution/enable",
-      std::bind(
-        &TransframerInterface::handle_request_enable,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2)
+    std::string(this->get_name()) + "/execution/enable",
+    std::bind(
+      &TransframerInterface::handle_request_enable,
+      this,
+      std::placeholders::_1,
+      std::placeholders::_2)
     );
 
   // Call this service to pause functionality
   disable_pause_service_ =
     this->create_service<std_srvs::srv::Trigger>(
-      std::string(this->get_name()) + "/execution/disable/pause",
-      std::bind(
-        &TransframerInterface::handle_request_disable_pause,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2)
+    std::string(this->get_name()) + "/execution/disable/pause",
+    std::bind(
+      &TransframerInterface::handle_request_disable_pause,
+      this,
+      std::placeholders::_1,
+      std::placeholders::_2)
     );
 
   // Call this service to stop functionality
   disable_stop_service_ =
     this->create_service<std_srvs::srv::Trigger>(
-      std::string(this->get_name()) + "/execution/disable/stop",
-      std::bind(
-        &TransframerInterface::handle_request_disable_stop,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2)
+    std::string(this->get_name()) + "/execution/disable/stop",
+    std::bind(
+      &TransframerInterface::handle_request_disable_stop,
+      this,
+      std::placeholders::_1,
+      std::placeholders::_2)
     );
 
   // Create callback group for shutdown and kill service servers
@@ -78,34 +78,34 @@ TransframerInterface::TransframerInterface()
   // Call this service to shutdown this node
   shutdown_service_ =
     this->create_service<std_srvs::srv::Trigger>(
-      std::string(this->get_name()) + "/execution/halt/shutdown_node",
-      std::bind(
-        &TransframerInterface::handle_request_shutdown,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2),
-      rmw_qos_profile_services_default,
-      cb_group_
+    std::string(this->get_name()) + "/execution/halt/shutdown_node",
+    std::bind(
+      &TransframerInterface::handle_request_shutdown,
+      this,
+      std::placeholders::_1,
+      std::placeholders::_2),
+    rmw_qos_profile_services_default,
+    cb_group_
     );
 
   // Call this service to kill this node
   kill_service_ =
     this->create_service<std_srvs::srv::Trigger>(
-      std::string(this->get_name()) + "/execution/halt/kill",
-      std::bind(
-        &TransframerInterface::handle_request_kill,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2),
-      rmw_qos_profile_services_default,
-      cb_group_
+    std::string(this->get_name()) + "/execution/halt/kill",
+    std::bind(
+      &TransframerInterface::handle_request_kill,
+      this,
+      std::placeholders::_1,
+      std::placeholders::_2),
+    rmw_qos_profile_services_default,
+    cb_group_
     );
 
   // This service should be called by code in this node in order to signify
   // the end of execution of this node to the task planner that enabled it
   trigger_join_service_client_ptr_ =
     this->create_client<std_srvs::srv::SetBool>(
-      std::string(this->get_name()) + "/execution/join");
+    std::string(this->get_name()) + "/execution/join");
 
   // A timer that checks state variable state_t1_ which determines the state of
   // this node
@@ -172,7 +172,8 @@ void TransframerInterface::clock_callback()
   if (state_t0_.load() != state_t1_.load()) {
     // Transition to state if transition is allowed
     if (transition_table_[state_t0_.load()][state_t1_.load()] == true) {
-      RCLCPP_INFO(this->get_logger(), "EXECUTING TRANSITION: %d -> %d",
+      RCLCPP_INFO(
+        this->get_logger(), "EXECUTING TRANSITION: %d -> %d",
         state_t0_.load(), state_t1_.load());
 
       // Store new state to old
@@ -211,7 +212,8 @@ void TransframerInterface::clock_callback()
         // scope might block KILL
       }
     } else {
-      RCLCPP_INFO(this->get_logger(), "TRANSITION: %d -> %d NOT ALLOWED",
+      RCLCPP_INFO(
+        this->get_logger(), "TRANSITION: %d -> %d NOT ALLOWED",
         state_t0_.load(), state_t1_.load());
 
       // Store old state to new
@@ -415,12 +417,14 @@ bool TransframerInterface::task_planner_notify_end()
 {
   while (!trigger_join_service_client_ptr_->wait_for_service(std::chrono::seconds(1))) {
     if (!rclcpp::ok()) {
-      RCLCPP_ERROR(this->get_logger(),
+      RCLCPP_ERROR(
+        this->get_logger(),
         "Client of service %s interrupted while waiting for service to appear",
         trigger_join_service_client_ptr_->get_service_name());
       return false;
     }
-    RCLCPP_WARN(this->get_logger(),
+    RCLCPP_WARN(
+      this->get_logger(),
       "Waiting for service %s to appear...",
       trigger_join_service_client_ptr_->get_service_name());
   }
