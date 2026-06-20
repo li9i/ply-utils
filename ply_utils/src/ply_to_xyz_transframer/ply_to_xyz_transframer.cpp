@@ -1,20 +1,33 @@
+// Copyright 2026 Alexandros Filotheou
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 /**
- * @file ply_to_xyz_transframer.hpp
- *
- * @author [Alexandros Philotheou] - alefilot@auth.gr
- * @version 0.1
- * @date 2025-07
- *
- * @copyright Copyright (c) 2025 - Alexandros Philotheou. Released under the MIT License (see LICENSE).
- *
  * @brief Transforms a .ply file with content expressed in one frame
- *                to a .xyz file with content expressed in another
+ *        to a .xyz file with content expressed in another
  */
 #include "ply_to_xyz_transframer/ply_to_xyz_transframer.hpp"
 
 /*******************************************************************************
 */
-Transframer::Transframer(std::shared_ptr<rclcpp::Node> node) : node_(node),
+Transframer::Transframer(std::shared_ptr<rclcpp::Node> node)
+: node_(node),
   input_file_id_(std::string(""))
 {
   tf_buffer_ =
@@ -37,35 +50,32 @@ Transframer::find_matching_files() const
 {
   std::vector<std::string> matched_files;
 
-  if (input_file_id_.compare("") != 0)
-  {
+  if (input_file_id_.compare("") != 0) {
     // The name of the file to be transframed
     std::string file_name = input_file_prefix_ + "_" + input_file_id_ + ".ply";
-    try
-    {
-      for (const auto& entry : std::filesystem::directory_iterator(input_directory_))
-      {
+    try {
+      for (const auto & entry : std::filesystem::directory_iterator(input_directory_)) {
         if (entry.is_regular_file() &&
-            entry.path().filename().string().compare(file_name) == 0)
+          entry.path().filename().string().compare(file_name) == 0)
         {
           matched_files.push_back(entry.path().string());
         }
       }
-    } catch (const std::filesystem::filesystem_error& e) {
+    } catch (const std::filesystem::filesystem_error & e) {
       RCLCPP_ERROR(node_->get_logger(), "File system error: %s", e.what());
     }
-  }
-  else
-  {
+  } else {
     std::regex pattern(input_file_pattern_);
 
     try {
-      for (const auto& entry : std::filesystem::directory_iterator(input_directory_))
-      {
-        if (entry.is_regular_file() && std::regex_match(entry.path().filename().string(), pattern))
+      for (const auto & entry : std::filesystem::directory_iterator(input_directory_)) {
+        if (entry.is_regular_file() && std::regex_match(entry.path().filename().string(),
+          pattern))
+        {
           matched_files.push_back(entry.path().string());
+        }
       }
-    } catch (const std::filesystem::filesystem_error& e) {
+    } catch (const std::filesystem::filesystem_error & e) {
       RCLCPP_ERROR(node_->get_logger(), "File system error: %s", e.what());
     }
   }
@@ -76,7 +86,7 @@ Transframer::find_matching_files() const
 /*******************************************************************************
 */
 std::string
-Transframer::generate_output_filename(const std::string& input_path) const
+Transframer::generate_output_filename(const std::string & input_path) const
 {
   std::string transformed_name = transform_filename(input_path);
   std::filesystem::path output_file =
@@ -86,14 +96,14 @@ Transframer::generate_output_filename(const std::string& input_path) const
 
 /*******************************************************************************
 */
-  void
+void
 Transframer::load_params(std::shared_ptr<rclcpp::Node> node)
 {
   // io directories
-  input_directory_ =   node_->get_parameter("input_directory").as_string();
-  output_directory_ =  node_->get_parameter("output_directory").as_string();
+  input_directory_ = node_->get_parameter("input_directory").as_string();
+  output_directory_ = node_->get_parameter("output_directory").as_string();
   input_file_prefix_ = node_->get_parameter("input_file_prefix").as_string();
-  input_file_id_ =     node_->get_parameter("input_file_id").as_string();
+  input_file_id_ = node_->get_parameter("input_file_id").as_string();
 
   /*  ------------------------------------
    * - input_1.ply → input_1.xyz
@@ -110,19 +120,19 @@ Transframer::load_params(std::shared_ptr<rclcpp::Node> node)
       -----------------------------------
   */
   // Default: all .ply files
-  input_file_pattern_ =   node_->get_parameter("input_file_pattern").as_string();
-  output_name_pattern_ =  node_->get_parameter("output_name_pattern").as_string();
+  input_file_pattern_ = node_->get_parameter("input_file_pattern").as_string();
+  output_name_pattern_ = node_->get_parameter("output_name_pattern").as_string();
 
   // io frames
-  source_frame_ =         node_->get_parameter("source_frame").as_string();
-  target_frame_ =         node_->get_parameter("target_frame").as_string();
+  source_frame_ = node_->get_parameter("source_frame").as_string();
+  target_frame_ = node_->get_parameter("target_frame").as_string();
 
   // Validate directories exist
-  if (!std::filesystem::exists(input_directory_))
+  if (!std::filesystem::exists(input_directory_)) {
     RCLCPP_ERROR(node_->get_logger(), "Input directory does not exist: '%s'",
       input_directory_.c_str());
-  if (!std::filesystem::exists(output_directory_))
-  {
+  }
+  if (!std::filesystem::exists(output_directory_)) {
     RCLCPP_INFO(node_->get_logger(), "Creating output directory: '%s'",
       output_directory_.c_str());
     std::filesystem::create_directories(output_directory_);
@@ -132,20 +142,20 @@ Transframer::load_params(std::shared_ptr<rclcpp::Node> node)
 /*******************************************************************************
 */
 pcl::PointCloud<pcl::PointXYZ>::Ptr
-Transframer::load_ply(const std::string &file)
+Transframer::load_ply(const std::string & file)
 {
   RCLCPP_INFO(node_->get_logger(), "Loading ply file from: '%s'", file.c_str());
 
   auto cloud = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
 
-  if (pcl::io::loadPLYFile<pcl::PointXYZ>(file, *cloud) == -1)
-  {
+  if (pcl::io::loadPLYFile<pcl::PointXYZ>(file, *cloud) == -1) {
     RCLCPP_ERROR(node_->get_logger(), "Failed to open PLY file: '%s'", file.c_str());
     return cloud;
   }
 
-  if (cloud->points.empty())
+  if (cloud->points.empty()) {
     RCLCPP_WARN(node_->get_logger(), "Loaded empty point cloud");
+  }
 
   cloud->width = cloud->points.size();
   cloud->height = 1;
@@ -162,8 +172,7 @@ void Transframer::run()
   RCLCPP_INFO(node_->get_logger(), "Finding matching files...");
   auto input_files = find_matching_files();
 
-  if (input_files.empty())
-  {
+  if (input_files.empty()) {
     RCLCPP_WARN(node_->get_logger(), "No matching files found in directory: '%s'",
       input_directory_.c_str());
     return;
@@ -171,18 +180,15 @@ void Transframer::run()
 
   RCLCPP_INFO(node_->get_logger(), "Found %zu files to process", input_files.size());
 
-  for (const auto& input_file : input_files)
-  {
+  for (const auto & input_file : input_files) {
     std::string output_file = generate_output_filename(input_file);
 
     RCLCPP_INFO(node_->get_logger(), "Processing: '%s' -> '%s'",
       input_file.c_str(), output_file.c_str());
 
-    try
-    {
+    try {
       auto input_cloud = load_ply(input_file);
-      if (input_cloud->empty())
-      {
+      if (input_cloud->empty()) {
         RCLCPP_WARN(node_->get_logger(), "Empty cloud loaded from '%s', skipping",
           input_file.c_str());
         continue;
@@ -190,7 +196,7 @@ void Transframer::run()
 
       auto transformed = transform_cloud(input_cloud);
       save_xyz(transformed, output_file);
-    } catch (const std::exception& e) {
+    } catch (const std::exception & e) {
       RCLCPP_ERROR(node_->get_logger(), "Failed to process '%s': %s",
         input_file.c_str(), e.what());
     }
@@ -203,12 +209,12 @@ void Transframer::run()
 /*******************************************************************************
 */
 void
-Transframer::save_xyz(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
-  const std::string &file)
+Transframer::save_xyz(
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
+  const std::string & file)
 {
   std::ofstream outfile(file);
-  if (!outfile.is_open())
-  {
+  if (!outfile.is_open()) {
     RCLCPP_ERROR(node_->get_logger(), "Failed to open file for writing: '%s'", file.c_str());
     return;
   }
@@ -216,8 +222,7 @@ Transframer::save_xyz(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
   // Set precision to ensure we don't lose precision in the output
   outfile << std::fixed << std::setprecision(6);
 
-  for (const auto& point : cloud->points)
-  {
+  for (const auto & point : cloud->points) {
     outfile << point.x << " " << point.y << " " << point.z << "\n";
   }
 
@@ -227,14 +232,13 @@ Transframer::save_xyz(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
 
 /*******************************************************************************
 */
-  pcl::PointCloud<pcl::PointXYZ>::Ptr
+pcl::PointCloud<pcl::PointXYZ>::Ptr
 Transframer::transform_cloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud =
     pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
 
-  for (const auto &pt : cloud->points)
-  {
+  for (const auto & pt : cloud->points) {
     geometry_msgs::msg::PointStamped in_pt, out_pt;
     in_pt.header.stamp = node_->now();
     in_pt.header.frame_id = source_frame_;
@@ -242,18 +246,18 @@ Transframer::transform_cloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     in_pt.point.y = pt.y;
     in_pt.point.z = pt.z;
 
-    try
-    {
+    try {
       out_pt = tf_buffer_->transform(in_pt, target_frame_,
         tf2::Duration(std::chrono::seconds(2)));
       transformed_cloud->points.emplace_back(out_pt.point.x, out_pt.point.y, out_pt.point.z);
-    } catch (tf2::TransformException &ex) {
+    } catch (tf2::TransformException & ex) {
       RCLCPP_WARN(node_->get_logger(), "TF transform failed: %s", ex.what());
     }
   }
 
-  if (transformed_cloud->points.empty())
+  if (transformed_cloud->points.empty()) {
     RCLCPP_ERROR(node_->get_logger(), "All transform operations failed");
+  }
 
   transformed_cloud->width = transformed_cloud->points.size();
   transformed_cloud->height = 1;
@@ -263,35 +267,32 @@ Transframer::transform_cloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 /*******************************************************************************
 */
 std::string
-Transframer::transform_filename(const std::string& input_filename) const
+Transframer::transform_filename(const std::string & input_filename) const
 {
-  if (output_name_pattern_.empty())
-  {
+  if (output_name_pattern_.empty()) {
     // Default: just change extension to .xyz
     std::filesystem::path p(input_filename);
     return p.stem().string() + ".xyz";
   }
 
-  try
-  {
+  try {
     std::regex pattern(input_file_pattern_);
     std::smatch matches;
     std::string filename = std::filesystem::path(input_filename).filename().string();
 
-    if (std::regex_match(filename, matches, pattern))
-    {
+    if (std::regex_match(filename, matches, pattern)) {
       // Replace each capture group reference ($1, $2, etc.) in the output pattern
       std::string result = output_name_pattern_;
-      for (size_t i = 1; i < matches.size(); ++i)
-      {
+      for (size_t i = 1; i < matches.size(); ++i) {
         std::string token = "$" + std::to_string(i);
         size_t pos = result.find(token);
-        if (pos != std::string::npos)
+        if (pos != std::string::npos) {
           result.replace(pos, token.length(), matches[i].str());
+        }
       }
       return result + ".xyz";
     }
-  } catch (const std::regex_error& e) {
+  } catch (const std::regex_error & e) {
     RCLCPP_ERROR(node_->get_logger(), "Regex error in output pattern: %s", e.what());
   }
 

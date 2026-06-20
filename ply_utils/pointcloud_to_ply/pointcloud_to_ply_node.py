@@ -1,7 +1,26 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: MIT
+# Copyright 2026 Alexandros Filotheou
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import os
-from typing import List, Tuple
+from typing import List
 
 import numpy as np
 import rclpy
@@ -154,7 +173,6 @@ class PointCloudToMeshNode(Node):
             return
         self._done = True
 
-        dbg = self.get_parameter("log_level_debug").value
         try:
             self.get_logger().info("Received point cloud; converting to numpy...")
             points = cloud_to_numpy(msg)
@@ -166,7 +184,9 @@ class PointCloudToMeshNode(Node):
             pcd = preprocess_pointcloud(
                 pcd=pcd,
                 voxel_downsample_size=self.get_parameter("voxel_downsample_size").value,
-                remove_statistical_outliers=self.get_parameter("remove_statistical_outliers").value,
+                remove_statistical_outliers=self.get_parameter(
+                    "remove_statistical_outliers"
+                ).value,
                 nso_nb_neighbors=self.get_parameter("nso_nb_neighbors").value,
                 nso_std_ratio=self.get_parameter("nso_std_ratio").value,
             )
