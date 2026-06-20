@@ -69,8 +69,9 @@ Transframer::find_matching_files() const
 
     try {
       for (const auto & entry : std::filesystem::directory_iterator(input_directory_)) {
-        if (entry.is_regular_file() && std::regex_match(entry.path().filename().string(),
-          pattern))
+        if (entry.is_regular_file() && std::regex_match(
+            entry.path().filename().string(),
+            pattern))
         {
           matched_files.push_back(entry.path().string());
         }
@@ -129,11 +130,13 @@ Transframer::load_params(std::shared_ptr<rclcpp::Node> node)
 
   // Validate directories exist
   if (!std::filesystem::exists(input_directory_)) {
-    RCLCPP_ERROR(node_->get_logger(), "Input directory does not exist: '%s'",
+    RCLCPP_ERROR(
+      node_->get_logger(), "Input directory does not exist: '%s'",
       input_directory_.c_str());
   }
   if (!std::filesystem::exists(output_directory_)) {
-    RCLCPP_INFO(node_->get_logger(), "Creating output directory: '%s'",
+    RCLCPP_INFO(
+      node_->get_logger(), "Creating output directory: '%s'",
       output_directory_.c_str());
     std::filesystem::create_directories(output_directory_);
   }
@@ -173,7 +176,8 @@ void Transframer::run()
   auto input_files = find_matching_files();
 
   if (input_files.empty()) {
-    RCLCPP_WARN(node_->get_logger(), "No matching files found in directory: '%s'",
+    RCLCPP_WARN(
+      node_->get_logger(), "No matching files found in directory: '%s'",
       input_directory_.c_str());
     return;
   }
@@ -183,13 +187,15 @@ void Transframer::run()
   for (const auto & input_file : input_files) {
     std::string output_file = generate_output_filename(input_file);
 
-    RCLCPP_INFO(node_->get_logger(), "Processing: '%s' -> '%s'",
+    RCLCPP_INFO(
+      node_->get_logger(), "Processing: '%s' -> '%s'",
       input_file.c_str(), output_file.c_str());
 
     try {
       auto input_cloud = load_ply(input_file);
       if (input_cloud->empty()) {
-        RCLCPP_WARN(node_->get_logger(), "Empty cloud loaded from '%s', skipping",
+        RCLCPP_WARN(
+          node_->get_logger(), "Empty cloud loaded from '%s', skipping",
           input_file.c_str());
         continue;
       }
@@ -197,12 +203,14 @@ void Transframer::run()
       auto transformed = transform_cloud(input_cloud);
       save_xyz(transformed, output_file);
     } catch (const std::exception & e) {
-      RCLCPP_ERROR(node_->get_logger(), "Failed to process '%s': %s",
+      RCLCPP_ERROR(
+        node_->get_logger(), "Failed to process '%s': %s",
         input_file.c_str(), e.what());
     }
   }
 
-  RCLCPP_INFO(node_->get_logger(), "Finished processing %zu files",
+  RCLCPP_INFO(
+    node_->get_logger(), "Finished processing %zu files",
     input_files.size());
 }
 
@@ -247,7 +255,8 @@ Transframer::transform_cloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     in_pt.point.z = pt.z;
 
     try {
-      out_pt = tf_buffer_->transform(in_pt, target_frame_,
+      out_pt = tf_buffer_->transform(
+        in_pt, target_frame_,
         tf2::Duration(std::chrono::seconds(2)));
       transformed_cloud->points.emplace_back(out_pt.point.x, out_pt.point.y, out_pt.point.z);
     } catch (tf2::TransformException & ex) {
