@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Node configuration -->
-  <node pkg="ply_utils" exec="pointcloud_to_ply_node" name="pointcloud_to_ply_node" output="screen">
+  <node pkg="pointcloud_conversions" exec="pointcloud_to_ply_node" name="pointcloud_to_ply_node" output="screen">
 
     <!-- Input/Output Configuration -->
     <param name="pointcloud_topic"            value="/point_cloud"/>
