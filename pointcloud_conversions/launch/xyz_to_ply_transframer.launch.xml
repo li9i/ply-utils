@@ -1,18 +1,18 @@
 <launch>
-  <let name="pkg_name"                value="ply_to_xyz_transframer"/>
+  <let name="pkg_name"                value="xyz_to_ply_transframer"/>
   <arg name="namespace"               default="/"/>
   <arg name="task_planner_notify_end" default="false"/>
   <!-- ===================================================================== -->
   <arg name="input_directory"         default="/home/lyrical/shared-input/"/>
   <arg name="output_directory"        default="/home/lyrical/shared-output/"/>
-  <arg name="input_file_prefix"       default="Sampled_Mesh"/>
+  <arg name="input_file_prefix"       default="3D_Model_Filtered_Point_Cloud"/>
   <let name="input_file_id"           value=""/> <!-- Leave blank -->
-  <arg name="input_file_pattern"      default="$(var input_file_prefix)_(\\d+)_\\.ply"/>
-  <arg name="output_name_pattern"     default="$(var input_file_prefix)_$1_"/>
+  <arg name="input_file_pattern"      default="$(var input_file_prefix)_(\\d+)\\.xyz"/>
+  <arg name="output_name_pattern"     default="$(var input_file_prefix)_$1"/>
   <arg name="source_frame"            default="map"/>
   <arg name="target_frame"            default="robot_base_link"/>
   <!-- ===================================================================== -->
-  <node pkg="ply_utils"
+  <node pkg="pointcloud_conversions"
        exec="$(var pkg_name)_interface_node"
        name="$(var pkg_name)"
        namespace="$(var namespace)"

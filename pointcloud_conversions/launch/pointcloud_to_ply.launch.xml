@@ -1,10 +1,10 @@
 <launch>
 
-  <node pkg="ply_utils"
+  <node pkg="pointcloud_conversions"
     exec="pointcloud_to_ply_node"
     name="pointcloud_to_ply_node"
     output="screen">
-      <param from="$(find-pkg-share ply_utils)/config/params.yaml"/>
+      <param from="$(find-pkg-share pointcloud_conversions)/config/params.yaml"/>
   </node>
 
 </launch>
