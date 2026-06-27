@@ -1,8 +1,8 @@
-### `ply_utils`: ROS 2 utilities for PLY / XYZ / PointCloud2
+### `pointcloud_conversions`: ROS 2 point-cloud conversion & reframing for PLY / XYZ / PointCloud2
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
-  <a href="https://index.ros.org/p/ply_utils/#humble"><img src="https://img.shields.io/ros/v/humble/ply_utils" alt="ROS 2 Humble version"/></a>
+  <a href="https://index.ros.org/p/pointcloud_conversions/#humble"><img src="https://img.shields.io/ros/v/humble/pointcloud_conversions" alt="ROS 2 Humble version"/></a>
 </p>
 
 A single ROS 2 (Humble) package bundling three utilities:
@@ -18,7 +18,7 @@ cd ~/ros2_ws/src
 git clone -b humble-devel https://github.com/li9i/ply-utils.git
 cd ~/ros2_ws
 rosdep install --from-paths src -y --ignore-src
-colcon build --packages-select ply_utils
+colcon build --packages-select pointcloud_conversions
 ```
 
 `pointcloud_to_ply` additionally requires [Open3D](https://www.open3d.org/), which has no rosdep key:
@@ -30,7 +30,7 @@ pip3 install open3d
 ## Run
 
 ```bash
-ros2 launch ply_utils pointcloud_to_ply.launch.xml
-ros2 launch ply_utils ply_to_xyz_transframer.launch.xml
-ros2 launch ply_utils xyz_to_ply_transframer.launch.xml
+ros2 launch pointcloud_conversions pointcloud_to_ply.launch.xml
+ros2 launch pointcloud_conversions ply_to_xyz_transframer.launch.xml
+ros2 launch pointcloud_conversions xyz_to_ply_transframer.launch.xml
 ```

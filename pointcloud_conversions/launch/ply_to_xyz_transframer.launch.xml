@@ -12,7 +12,7 @@
   <arg name="source_frame"            default="map"/>
   <arg name="target_frame"            default="robot_base_link"/>
   <!-- ===================================================================== -->
-  <node pkg="ply_utils"
+  <node pkg="pointcloud_conversions"
        exec="$(var pkg_name)_interface_node"
        name="$(var pkg_name)"
        namespace="$(var namespace)"
